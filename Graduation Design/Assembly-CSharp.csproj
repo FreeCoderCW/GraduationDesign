@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Assets\MyGame\Scripts\PlayerAnimation.cs" />
     <Compile Include="Assets\MyGame\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\MyGame\Scripts\ShadowSprite.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Git/GraduationDesign/Graduation Design/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

@@ -6,7 +6,6 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
     private BoxCollider2D coll;
-    private Animator anim;
 
     [Header("移动参数")]
     public float speed = 8f;
@@ -16,8 +15,6 @@ public class PlayerMovement : MonoBehaviour
     public float jumpForce = 6.3f;
     public float hangingJumpForce = 15f;
 
-
-    float jumpTime;
 
     [Header("状态")]
     public bool isCrouch;
@@ -37,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     public LayerMask groundLayer;
 
-    float xVelocity;
+    public float xVelocity;
 
     //按键设置
     bool jumpPressed;
@@ -57,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
     //float right = 0.5f;
 
 
-    public Transform groundCheck;
+    //public Transform groundCheck;
     
     int jumpCount;
 
@@ -66,7 +63,6 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         coll = GetComponent<BoxCollider2D>();
-        anim = GetComponent<Animator>();
 
         playerHeight = up;
         colliderStandSize = coll.size;
@@ -95,7 +91,6 @@ public class PlayerMovement : MonoBehaviour
 
         Jump();
 
-        SwitchAnim();
     }
 
     void PhysicsCheck()
@@ -118,6 +113,8 @@ public class PlayerMovement : MonoBehaviour
             isHeadBlocked = true;
         else isHeadBlocked = false;
 
+
+        //悬挂判定射线
         float direction = transform.localScale.x;
         Vector2 grabDir = new Vector2(direction, 0f);
         RaycastHit2D blockedCheck = Raycast(new Vector2(footOffset * direction, playerHeight), grabDir, grabDistance, groundLayer);
@@ -197,6 +194,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else if (jumpPressed && jumpCount > 0 && isJump && !isHeadBlocked)//二段跳
         {
+            rb.velocity = new Vector2(rb.velocity.x, 0f);
             //rb.velocity = new Vector2(rb.velocity.x, jumpForce);
             rb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
             jumpCount--;
@@ -241,13 +239,6 @@ public class PlayerMovement : MonoBehaviour
     }
 
     
-
-    void SwitchAnim()
-    {
-        anim.SetFloat("running", Mathf.Abs(rb.velocity.x));
-
-        
-    }
 }
 
 
