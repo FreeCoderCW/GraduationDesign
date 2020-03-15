@@ -1,20 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
     private BoxCollider2D coll;
 
+    [Header("CD的UI组件")]
+    public Image cdImage;
+
     [Header("移动参数")]
     public float speed = 8f;
     public float crouchSpeedDivisor = 3f;
+    public float horizontalMove;
 
     [Header("跳跃参数")]
     public float jumpForce = 6.3f;
     public float hangingJumpForce = 15f;
+    int jumpCount;
 
+    [Header("Dash参数")]
+    public float dashTime;//dash时长
+    private float dashTimeLeft;//dash剩余时长
+    private float lastDash = -10f;//上一次dash时间
+    public float dashCoolDown;
+    public float dashSpeed;
 
     [Header("状态")]
     public bool isCrouch;
@@ -22,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isJump;
     public bool isHeadBlocked;
     public bool isHanging;
+    public bool isDashing;
 
     [Header("环境检测")]
     public float footOffset = 0.47f;
@@ -56,13 +69,14 @@ public class PlayerMovement : MonoBehaviour
 
     //public Transform groundCheck;
     
-    int jumpCount;
+    
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         coll = GetComponent<BoxCollider2D>();
+        
 
         playerHeight = up;
         colliderStandSize = coll.size;
@@ -74,20 +88,34 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Jump") && jumpCount > 0)
+        if (Input.GetButtonDown("Jump") && jumpCount > 0 )
             jumpPressed = true;
 
         crouchHeld = Input.GetButton("Crouch");
         crouchPressed = Input.GetButtonDown("Crouch");
 
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            if(Time.time >= (lastDash + dashCoolDown))
+            {
+                //可以执行dash
+                ReadyToDash();
+            }
+        }
+
+
+        //cdUI
+        cdImage.fillAmount -= 1.0f / dashCoolDown * Time.deltaTime;
     }
 
     private void FixedUpdate()
     {
-        
+
         PhysicsCheck();
 
         GroundMovement();
+
+
 
         Jump();
 
@@ -138,7 +166,13 @@ public class PlayerMovement : MonoBehaviour
     void GroundMovement()
     {
         //判断悬挂
-        if (isHanging) return;
+        if (isHanging) 
+            return;
+
+        Dash();
+
+        if (isDashing)
+            return;
 
 
         if (crouchHeld && !isCrouch && isOnGround)
@@ -238,7 +272,46 @@ public class PlayerMovement : MonoBehaviour
         return hit;
     }
 
-    
+    void ReadyToDash()
+    {
+        if (!isHanging && !isCrouch)
+            isDashing = true;
+
+
+        dashTimeLeft = dashTime;
+
+        lastDash = Time.time;
+
+        cdImage.fillAmount = 1;
+
+    }
+
+    void Dash()
+    {
+        horizontalMove = Input.GetAxisRaw("Horizontal");//-1，0，1
+
+        
+        if (isDashing)
+        {
+            if(dashTimeLeft > 0)
+            {
+                if (rb.transform.localScale.x >= 0)
+                    rb.velocity = new Vector2(dashSpeed , rb.velocity.y);
+                else
+                    rb.velocity = new Vector2(dashSpeed * -1f, rb.velocity.y);
+
+                dashTimeLeft -= Time.deltaTime;
+
+                ShadowPool.instance.GetFromPool();
+            }
+            if (dashTimeLeft <= 0)
+            {
+                isDashing = false;
+                
+            }
+                
+        }
+    }
 }
 
 

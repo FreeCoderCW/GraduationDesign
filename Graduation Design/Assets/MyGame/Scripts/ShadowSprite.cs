@@ -25,12 +25,12 @@ public class ShadowSprite : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         thisSprite = GetComponent<SpriteRenderer>();
-        playerSprite = GetComponent<SpriteRenderer>();
+        playerSprite = player.GetComponent<SpriteRenderer>();
 
         alpha = alphaSet;
 
         thisSprite.sprite = playerSprite.sprite;
-
+        
         transform.position = player.position;
         transform.localScale = player.localScale;
         transform.rotation = player.rotation;
@@ -43,13 +43,14 @@ public class ShadowSprite : MonoBehaviour
     {
         alpha *= alphaMultiplier;
 
-        color = new Color(0.5f, 0.5f, 1, alpha);
+        color = new Color(1f, 0.5f, 0.5f, alpha);
 
         thisSprite.color = color;
 
-        if(Time.time >= activeStart + activeTime)
+        if(Time.time >= (activeStart + activeTime))
         {
             //返回对象池
+            ShadowPool.instance.ReturnPool(this.gameObject);
         }
     }
 }
