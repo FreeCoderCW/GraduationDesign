@@ -27,6 +27,11 @@ public class PlayerMovement : MonoBehaviour
     private float lastDash = -10f;//上一次dash时间
     public float dashCoolDown;
     public float dashSpeed;
+    public float dashForce = 50f;
+
+    [Header("武器参数")]
+    public Transform weaponHold;
+    public Transform weapon;
 
     [Header("状态")]
     public bool isCrouch;
@@ -66,8 +71,6 @@ public class PlayerMovement : MonoBehaviour
     float left = 0.44f;
     //float right = 0.5f;
 
-
-    //public Transform groundCheck;
     
     
 
@@ -76,7 +79,10 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         coll = GetComponent<BoxCollider2D>();
-        
+        weaponHold = rb.transform.Find("holdPoint").GetComponent<Transform>();
+        weapon = GameObject.FindGameObjectWithTag("weaponEquiped").transform;
+        weapon.position = new Vector2(0f, 0.35f);
+
 
         playerHeight = up;
         colliderStandSize = coll.size;
@@ -94,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
         crouchHeld = Input.GetButton("Crouch");
         crouchPressed = Input.GetButtonDown("Crouch");
 
-        if (Input.GetKeyDown(KeyCode.J))
+        if (Input.GetMouseButtonDown(1))
         {
             if(Time.time >= (lastDash + dashCoolDown))
             {
@@ -106,6 +112,8 @@ public class PlayerMovement : MonoBehaviour
 
         //cdUI
         cdImage.fillAmount -= 1.0f / dashCoolDown * Time.deltaTime;
+
+        WeaponDirection();
     }
 
     private void FixedUpdate()
@@ -236,15 +244,32 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
+    //人物朝向
     void FilpDirection()
     {
+        //人物朝向跟随鼠标
+        //获取鼠标坐标
+        Vector3 mousePosition = Input.mousePosition;
+        //获取人物的世界坐标并转化成屏幕坐标
+        Vector3 ScreenPosition = Camera.main.WorldToScreenPoint(transform.position);
+
+
+        if(mousePosition.x > ScreenPosition.x)
+            transform.localScale = new Vector2(1, 1);
+        else
+            transform.localScale = new Vector2(-1, 1);
+
+        /*人物朝向跟随键盘按键
         if (xVelocity < 0)
             transform.localScale = new Vector2(-1, 1);
         if (xVelocity > 0)
             transform.localScale = new Vector2(1, 1);
+        */
 
     }
 
+    //下蹲与站起
     void Crouch()
     {
         isCrouch = true;
@@ -259,6 +284,7 @@ public class PlayerMovement : MonoBehaviour
         coll.offset = colliderStandOffset;
     }
 
+    //射线重载
     RaycastHit2D Raycast(Vector2 offset,Vector2 rayDirection,float length,LayerMask layer)
     {
         Vector2 pos = transform.position;
@@ -272,6 +298,7 @@ public class PlayerMovement : MonoBehaviour
         return hit;
     }
 
+    //冲刺函数
     void ReadyToDash()
     {
         if (!isHanging && !isCrouch)
@@ -289,16 +316,21 @@ public class PlayerMovement : MonoBehaviour
     void Dash()
     {
         horizontalMove = Input.GetAxisRaw("Horizontal");//-1，0，1
-
+        Vector2 mouseVector = getMouseVector();
         
         if (isDashing)
         {
             if(dashTimeLeft > 0)
             {
+                /*只能左右冲刺
                 if (rb.transform.localScale.x >= 0)
                     rb.velocity = new Vector2(dashSpeed , rb.velocity.y);
                 else
                     rb.velocity = new Vector2(dashSpeed * -1f, rb.velocity.y);
+                */
+
+                //向鼠标位置冲刺
+                rb.velocity = new Vector2(dashSpeed * mouseVector.x,dashForce * mouseVector.y);
 
                 dashTimeLeft -= Time.deltaTime;
 
@@ -306,11 +338,34 @@ public class PlayerMovement : MonoBehaviour
             }
             if (dashTimeLeft <= 0)
             {
+
+                rb.velocity = new Vector2(rb.velocity.x, 0f);
                 isDashing = false;
                 
             }
                 
         }
+    }
+
+
+    private Vector2 getMouseVector()
+    {
+        Vector2 mouse = Input.mousePosition;
+        Vector2 obj = Camera.main.WorldToScreenPoint(transform.position);
+        Vector2 direction = mouse - obj;
+        direction = direction.normalized;
+        return direction;
+
+    }
+
+    //武器相关
+    public void WeaponDirection()
+    {
+        Vector2 mouse = getMouseVector();
+        //Vector2 weaponPosition = Camera.main.WorldToScreenPoint(weapon.position);
+        weaponHold.up = mouse;
+        
+        
     }
 }
 

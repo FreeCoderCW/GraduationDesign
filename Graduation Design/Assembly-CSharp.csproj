@@ -67,6 +67,7 @@
     <Compile Include="Assets\MyGame\Scripts\PlayerMovement.cs" />
     <Compile Include="Assets\MyGame\Scripts\ShadowPool.cs" />
     <Compile Include="Assets\MyGame\Scripts\ShadowSprite.cs" />
+    <None Include="Assets\FreePixelGear\ReadMe.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Git/GraduationDesign/Graduation Design/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
