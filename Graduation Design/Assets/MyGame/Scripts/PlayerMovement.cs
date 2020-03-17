@@ -29,10 +29,6 @@ public class PlayerMovement : MonoBehaviour
     public float dashSpeed;
     public float dashForce = 50f;
 
-    [Header("武器参数")]
-    public Transform weaponHold;
-    public Transform weapon;
-
     [Header("状态")]
     public bool isCrouch;
     public bool isOnGround;
@@ -40,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isHeadBlocked;
     public bool isHanging;
     public bool isDashing;
+    public bool isAttack;
 
     [Header("环境检测")]
     public float footOffset = 0.47f;
@@ -79,9 +76,6 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         coll = GetComponent<BoxCollider2D>();
-        weaponHold = rb.transform.Find("holdPoint").GetComponent<Transform>();
-        weapon = GameObject.FindGameObjectWithTag("weaponEquiped").transform;
-        weapon.position = new Vector2(0f, 0.35f);
 
 
         playerHeight = up;
@@ -113,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
         //cdUI
         cdImage.fillAmount -= 1.0f / dashCoolDown * Time.deltaTime;
 
-        WeaponDirection();
+        //WeaponDirection();
     }
 
     private void FixedUpdate()
@@ -358,15 +352,7 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    //武器相关
-    public void WeaponDirection()
-    {
-        Vector2 mouse = getMouseVector();
-        //Vector2 weaponPosition = Camera.main.WorldToScreenPoint(weapon.position);
-        weaponHold.up = mouse;
-        
-        
-    }
+
 }
 
 

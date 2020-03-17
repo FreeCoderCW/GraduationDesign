@@ -65,8 +65,11 @@
   <ItemGroup>
     <Compile Include="Assets\MyGame\Scripts\PlayerAnimation.cs" />
     <Compile Include="Assets\MyGame\Scripts\PlayerMovement.cs" />
+    <Compile Include="Assets\MyGame\Scripts\Projectile.cs" />
     <Compile Include="Assets\MyGame\Scripts\ShadowPool.cs" />
     <Compile Include="Assets\MyGame\Scripts\ShadowSprite.cs" />
+    <Compile Include="Assets\MyGame\Scripts\Weapon.cs" />
+    <Compile Include="Assets\MyGame\Scripts\WeaponFocus.cs" />
     <None Include="Assets\FreePixelGear\ReadMe.txt" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>D:/Git/GraduationDesign/Graduation Design/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
