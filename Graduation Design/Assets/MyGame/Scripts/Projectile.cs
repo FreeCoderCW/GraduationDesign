@@ -7,6 +7,7 @@ public class Projectile : MonoBehaviour
     public Rigidbody2D rb;
     public Collider2D coll;
     public LayerMask ground;
+    public LayerMask enemy;
     public float speed;
     public float lifeTime;
 
@@ -27,7 +28,7 @@ public class Projectile : MonoBehaviour
         if (rb.bodyType != RigidbodyType2D.Static)
             rb.velocity = transform.up * speed;
 
-        if (coll.IsTouchingLayers(ground))
+        if (coll.IsTouchingLayers(ground) || coll.IsTouchingLayers(enemy))
             rb.bodyType = RigidbodyType2D.Static;
         
 

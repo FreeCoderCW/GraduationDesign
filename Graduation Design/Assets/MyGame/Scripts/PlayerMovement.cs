@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
     private BoxCollider2D coll;
+    private SpriteRenderer sr;
 
     [Header("CD的UI组件")]
     public Image cdImage;
@@ -37,6 +38,8 @@ public class PlayerMovement : MonoBehaviour
     public bool isHanging;
     public bool isDashing;
     public bool isAttack;
+    public bool isHurt;
+    public float hurtTime;
 
     [Header("环境检测")]
     public float footOffset = 0.47f;
@@ -68,14 +71,24 @@ public class PlayerMovement : MonoBehaviour
     float left = 0.44f;
     //float right = 0.5f;
 
-    
-    
+    //受伤参数
+    Color disappear = new Color(1, 1, 1, 0);
+    Color appear = new Color(1, 1, 1, 1);
+    float duringTime = 1f;
+    float gapTime = 0.1f;
+    float temp = 0f;
+    bool IsDisplay = true;
+    bool NoHurt = false;
+
+
+
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         coll = GetComponent<BoxCollider2D>();
+        sr = GetComponent<SpriteRenderer>();
 
 
         playerHeight = up;
@@ -88,6 +101,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         if (Input.GetButtonDown("Jump") && jumpCount > 0 )
             jumpPressed = true;
 
@@ -108,6 +122,45 @@ public class PlayerMovement : MonoBehaviour
         cdImage.fillAmount -= 1.0f / dashCoolDown * Time.deltaTime;
 
         //WeaponDirection();
+
+        if (NoHurt)//受伤后无敌时间
+        {
+            duringTime -= Time.deltaTime;
+            if (duringTime <= 0)
+            {
+                if (!IsDisplay)
+                {
+                    sr.color = appear;
+                    IsDisplay = true;
+                    temp = 0;
+                }
+                NoHurt = false;
+                duringTime = 1f;
+            } 
+                
+
+            temp += Time.deltaTime;
+            if (temp >= gapTime)
+            {
+                if (IsDisplay)
+                {
+                    sr.color = disappear;
+                    IsDisplay = false;
+                    temp = 0;
+                }
+                else
+                {
+                    sr.color = appear;
+                    IsDisplay = true;
+                    temp = 0;
+                }
+            }
+        }
+
+        if (Time.time > hurtTime + 0.2f) 
+        {
+            isHurt = false;
+        }
     }
 
     private void FixedUpdate()
@@ -115,9 +168,8 @@ public class PlayerMovement : MonoBehaviour
 
         PhysicsCheck();
 
-        GroundMovement();
-
-
+        if(!isHurt)
+            GroundMovement();
 
         Jump();
 
@@ -352,7 +404,31 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    //受伤函数
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        
+        if (collision.gameObject.tag == "Enemy"&&!NoHurt)
+        {
 
+            if (transform.position.x < collision.gameObject.transform.position.x)
+            {
+                rb.velocity = new Vector2(-15, 5);
+                hurtTime = Time.time;
+                isHurt = true;
+                NoHurt = true;
+                
+            }
+            else if (transform.position.x > collision.gameObject.transform.position.x)
+            {
+                rb.velocity = new Vector2(15, 5);
+                hurtTime = Time.time;
+                isHurt = true;
+                NoHurt = true;
+            }
+                
+        }
+    }
 }
 
 

@@ -101,6 +101,9 @@ MonoBehaviour:
   ground:
     serializedVersion: 2
     m_Bits: 256
+  enemy:
+    serializedVersion: 2
+    m_Bits: 1024
   speed: 25
   lifeTime: 1.5
   destroyEffect: {fileID: 0}
