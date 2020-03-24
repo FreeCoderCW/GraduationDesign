@@ -40,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
     public bool isAttack;
     public bool isHurt;
     public float hurtTime;
+    public float health;
 
     [Header("环境检测")]
     public float footOffset = 0.47f;
@@ -119,7 +120,7 @@ public class PlayerMovement : MonoBehaviour
 
 
         //cdUI
-        cdImage.fillAmount -= 1.0f / dashCoolDown * Time.deltaTime;
+        //cdImage.fillAmount -= 1.0f / dashCoolDown * Time.deltaTime;
 
         //WeaponDirection();
 
@@ -172,6 +173,8 @@ public class PlayerMovement : MonoBehaviour
             GroundMovement();
 
         Jump();
+
+        Death();
 
     }
 
@@ -413,6 +416,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (transform.position.x < collision.gameObject.transform.position.x)
             {
+                health--;
                 rb.velocity = new Vector2(-15, 5);
                 hurtTime = Time.time;
                 isHurt = true;
@@ -421,12 +425,22 @@ public class PlayerMovement : MonoBehaviour
             }
             else if (transform.position.x > collision.gameObject.transform.position.x)
             {
+                health--;
                 rb.velocity = new Vector2(15, 5);
                 hurtTime = Time.time;
                 isHurt = true;
                 NoHurt = true;
             }
                 
+        }
+    }
+
+    //死亡函数
+    void Death()
+    {
+        if (health <= 0)
+        {
+            Destroy(gameObject);
         }
     }
 }

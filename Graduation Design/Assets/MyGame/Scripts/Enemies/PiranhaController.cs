@@ -9,6 +9,9 @@ public class PiranhaController : MonoBehaviour
     public Transform piranha;
     public Transform player;
     public BoxCollider2D boxcoll;
+    public float health;
+    public Weapon bow;
+
     Vector2 OldOffset;
     Vector2 OldSize;
     Vector2 NewOffset;
@@ -30,6 +33,8 @@ public class PiranhaController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        death();
+
         if (attackEnabled)
             anim.SetBool("attack", true);
         else 
@@ -39,6 +44,8 @@ public class PiranhaController : MonoBehaviour
             piranha.localScale = new Vector2(1, 1);
         else
             piranha.localScale = new Vector2(-1, 1);
+
+
     }
 
     public void Attack()
@@ -52,4 +59,19 @@ public class PiranhaController : MonoBehaviour
         boxcoll.offset = OldOffset;
         boxcoll.size = OldSize;
     }
+
+    public void death()
+    {
+        if(health<=0)
+            Destroy(gameObject);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "Bullet")
+        {
+            health -= bow.damage;
+        }
+    }
+
 }

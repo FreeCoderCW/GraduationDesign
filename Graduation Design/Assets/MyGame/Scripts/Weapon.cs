@@ -12,6 +12,8 @@ public class Weapon : MonoBehaviour
     public Sprite readyBowSR;
     public Sprite bowSR;
 
+    public float damage;
+
     private float timeBtwShots;
     public float startTimeBtwShots;
 
@@ -52,11 +54,13 @@ public class Weapon : MonoBehaviour
                 {
                     gameObject.GetComponent<SpriteRenderer>().sprite = bowSR;
                     Instantiate(FastArrow, shotPoint.position, transform.rotation);
+                    damage = 2;
                 }
                 else
                 {
                     gameObject.GetComponent<SpriteRenderer>().sprite = bowSR;
                     Instantiate(NormalArrow, shotPoint.position, transform.rotation);
+                    damage = 1;
                 } 
                 
                 timeBtwShots = startTimeBtwShots;
