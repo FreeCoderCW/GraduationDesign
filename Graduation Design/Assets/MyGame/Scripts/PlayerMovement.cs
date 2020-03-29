@@ -255,7 +255,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (isHanging)
         {
-            jumpCount=1;
+            jumpCount=2;
             if (jumpPressed)
             {
                 rb.bodyType = RigidbodyType2D.Dynamic;
@@ -358,7 +358,7 @@ public class PlayerMovement : MonoBehaviour
 
         lastDash = Time.time;
 
-        cdImage.fillAmount = 1;
+        //cdImage.fillAmount = 1;
 
     }
 

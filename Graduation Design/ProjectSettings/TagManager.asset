@@ -52,6 +52,9 @@ TagManager:
   - name: Player
     uniqueID: 607037001
     locked: 0
+  - name: Shadows
+    uniqueID: 3988056817
+    locked: 0
   - name: Foreground
     uniqueID: 133781895
     locked: 0
