@@ -74,8 +74,10 @@
     <Compile Include="Assets\Addons\Tilemap\Tiles\Rule Tile\Scripts\RuleTile.cs" />
     <Compile Include="Assets\Addons\Tilemap\Tiles\Terrain Tile\Scripts\TerrainTile.cs" />
     <Compile Include="Assets\Addons\Tilemap\Tiles\Weighted Random Tile\WeightedRandomTile.cs" />
-    <Compile Include="Assets\MyGame\Scripts\Enemies\PiranhaAttackJudge.cs" />
+    <Compile Include="Assets\MyGame\Scripts\Enemies\Destroyer.cs" />
+    <Compile Include="Assets\MyGame\Scripts\Enemies\EnemyBullet.cs" />
     <Compile Include="Assets\MyGame\Scripts\Enemies\PiranhaController.cs" />
+    <Compile Include="Assets\MyGame\Scripts\Enemies\SlugController.cs" />
     <Compile Include="Assets\MyGame\Scripts\EnterNextLevel.cs" />
     <Compile Include="Assets\MyGame\Scripts\PlayerAnimation.cs" />
     <Compile Include="Assets\MyGame\Scripts\PlayerMovement.cs" />

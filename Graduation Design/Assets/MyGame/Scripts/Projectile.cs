@@ -7,9 +7,9 @@ public class Projectile : MonoBehaviour
     public Rigidbody2D rb;
     public Collider2D coll;
     public LayerMask ground;
-    public LayerMask enemy;
     public float speed;
     public float lifeTime;
+    [SerializeField] float damage=1f;
 
     public GameObject destroyEffect;
 
@@ -28,7 +28,7 @@ public class Projectile : MonoBehaviour
         if (rb.bodyType != RigidbodyType2D.Static)
             rb.velocity = transform.up * speed;
 
-        if (coll.IsTouchingLayers(ground) || coll.IsTouchingLayers(enemy))
+        if (coll.IsTouchingLayers(ground))
             rb.bodyType = RigidbodyType2D.Static;
         
 
@@ -40,12 +40,13 @@ public class Projectile : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Enemy")
         {
+            collision.GetComponent<PiranhaController>().health -= damage;
             Destroy(gameObject);
         }
+        
     }
-
 }

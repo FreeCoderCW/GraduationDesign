@@ -5,12 +5,17 @@ using UnityEngine;
 public class PiranhaController : MonoBehaviour
 {
     public Animator anim;
-    public bool attackEnabled;
     public Transform piranha;
     public Transform player;
+    public GameObject deathEffect;
+
+    [SerializeField] private float attackRange;
+
     public BoxCollider2D boxcoll;
     public float health;
-    public Weapon bow;
+
+    public GameObject projectile;
+
 
     Vector2 OldOffset;
     Vector2 OldSize;
@@ -28,6 +33,7 @@ public class PiranhaController : MonoBehaviour
         OldSize = new Vector2(boxcoll.size.x, boxcoll.size.y);
         NewOffset = new Vector2(boxcoll.offset.x - 0.75f, boxcoll.offset.y);
         NewSize = new Vector2(2.5f, boxcoll.size.y);
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
     }
 
     // Update is called once per frame
@@ -35,7 +41,7 @@ public class PiranhaController : MonoBehaviour
     {
         death();
 
-        if (attackEnabled)
+        if (Vector2.Distance(transform.position,player.position) < attackRange)
             anim.SetBool("attack", true);
         else 
             anim.SetBool("attack", false);
@@ -52,6 +58,7 @@ public class PiranhaController : MonoBehaviour
     {
         boxcoll.offset = NewOffset;
         boxcoll.size = NewSize;
+        shot();
     }
 
     public void Back()
@@ -62,16 +69,17 @@ public class PiranhaController : MonoBehaviour
 
     public void death()
     {
-        if(health<=0)
+        if (health <= 0)
+        {
+            Instantiate(deathEffect, transform.position, Quaternion.identity);
             Destroy(gameObject);
+        }
+            
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void shot()
     {
-        if(collision.gameObject.tag == "Bullet")
-        {
-            health -= bow.damage;
-        }
+        Instantiate(projectile, transform.position, Quaternion.identity);
     }
 
 }

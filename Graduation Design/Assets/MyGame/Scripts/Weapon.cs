@@ -53,13 +53,13 @@ public class Weapon : MonoBehaviour
                 if (holdTime >= focusTime)
                 {
                     gameObject.GetComponent<SpriteRenderer>().sprite = bowSR;
-                    Instantiate(FastArrow, shotPoint.position, transform.rotation);
+                    Instantiate(FastArrow, shotPoint.position, transform.rotation);//生成快速箭矢
                     damage = 2;
                 }
                 else
                 {
                     gameObject.GetComponent<SpriteRenderer>().sprite = bowSR;
-                    Instantiate(NormalArrow, shotPoint.position, transform.rotation);
+                    Instantiate(NormalArrow, shotPoint.position, transform.rotation);//生产普通箭矢
                     damage = 1;
                 } 
                 

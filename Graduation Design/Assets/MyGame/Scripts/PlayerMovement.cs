@@ -406,12 +406,11 @@ public class PlayerMovement : MonoBehaviour
         return direction;
 
     }
-
+    
     //受伤函数
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        
-        if (collision.gameObject.tag == "Enemy"&&!NoHurt)
+        if (collision.gameObject.tag == "Enemy" && !NoHurt)
         {
 
             if (transform.position.x < collision.gameObject.transform.position.x)
@@ -421,7 +420,7 @@ public class PlayerMovement : MonoBehaviour
                 hurtTime = Time.time;
                 isHurt = true;
                 NoHurt = true;
-                
+
             }
             else if (transform.position.x > collision.gameObject.transform.position.x)
             {
@@ -431,7 +430,7 @@ public class PlayerMovement : MonoBehaviour
                 isHurt = true;
                 NoHurt = true;
             }
-                
+
         }
     }
 
